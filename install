@@ -1,0 +1,81 @@
+yum -y install epel-release
+yum -y --enablerepo=epel install libmcrypt-devel
+yum -y --enablerepo=epel install libtidy-devel
+yum -y install net-snmp-utilse
+
+yum -y install libxml2-devel openssl-devel freetype-devel libcurl-devel net-snmp-devel libpng-devel 
+
+libjpeg-turbo-devel openldap-devel readline-devel gd-devel bzip2-devel libicu-devel libwebp-devel 
+
+gmp-devel libxslt-devel libtidy-devel
+
+
+cd /usr/local/src
+
+wget http://jp2.php.net/get/php-7.2.6.tar.gz/from/this/mirror
+
+mv mirror php-7.2.6.tar.gz
+
+tar xvfz php-7.2.6.tar.gz
+
+
+
+./buildconf --force
+
+./configure --with-libdir=lib64 --with-pic --with-bz2 --with-freetype-dir --with-png-dir --with-
+
+xpm-dir --with-gettext --with-gmp --with-iconv --with-jpeg-dir --with-curl --with-webp-dir --with-
+
+png-dir --with-openssl --with-pcre-regex --with-zlib --with-layout=GNU --enable-exif --enable-ftp 
+
+--enable-sockets --with-kerberos --enable-shmop --enable-calendar --with-libxml-dir --with-mhash 
+
+--with-ldap --with-readline --with-snmp --with-tidy --with-xsl --with-gnu-ld --enable-mysqlnd --
+
+with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-mysql-sock=/var/lib/mysql/mysql.sock --enable-
+
+mbstring --with-gd --with-apxs2=/usr/local/apache2/bin/apxs
+
+
+make
+make install
+
+libtool --finish /usr/local/src/php-7.2.6/libs
+
+
+cp php.ini-development /usr/local/etc/php.ini
+
+mkdir /var/log/php
+chown daemon /var/log/php
+chmod 755 /var/log/php
+
+
+vi /usr/local/etc/php.ini
+
+--php.ini
+
+error_log = "/var/log/php/php_errors.log"
+
+expose_php = Off
+
+date.timezone = 'Asia/Tokyo'
+
+post_max_size = 100M
+
+upload_max_filesize = 100M
+
+
+--httpd.conf
+
+LoadModule php7_module modules/libphp7.so
+
+
+<IfModule dir_module>
+    DirectoryIndex index.html index.php
+</IfModule>
+
+<FilesMatch \.php$>
+    SetHandler application/x-httpd-php
+</FilesMatch>
+
+
